@@ -1,0 +1,22 @@
+<h1>Shortened URLs</h1>
+
+<div>
+  <ul>
+    <% @urls.each do |url| %>
+      <li>
+        <div><%= url.original %></div>
+        <div>
+          <a href=<%= request.protocol + request.host_with_port + '/' + url.shortened %>>
+            <%= url.shortened %>
+          </a>
+        </div>
+        <div><%= link_to 'Show', url %></div>
+        <div><%= link_to 'Destroy', url, method: :delete, data: { confirm: 'Are you sure?' } %></div>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<br />
+
+<%= link_to 'New Url', new_url_path %>

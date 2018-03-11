@@ -1,0 +1,15 @@
+<%= form_for(@url) do |f| %>
+  <% if flash[:error] %>
+    <div id="error_explanation">
+      <%= flash[:error] %>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.text_field :original, :placeholder=>"Please enter a URL" %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Submit" %>
+  </div>
+<% end %>
