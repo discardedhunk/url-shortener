@@ -131,4 +131,23 @@ describe Url do
       expect(rec.errors[:shortened]).to include 'has already been taken'
     end
   end
+
+  describe '.get_by_shortened' do
+    it 'returns nil if code is not valid' do
+      expect(Url.get_by_shortened("foo")).to eql(nil)
+    end
+
+    it 'calls Url.find_by_shortened if code is valid' do
+      code = "8zndKjGR"
+      allow(Url).to receive(:find_by_shortened)
+      Url.get_by_shortened(code)
+      expect(Url).to have_received(:find_by_shortened).with(code)
+    end
+
+    it 'returns the found URL' do
+      url = Url.new
+      allow(Url).to receive(:find_by_shortened).and_return(url)
+      expect(Url.get_by_shortened("8zndKjGR")).to eql(url)
+    end
+  end
 end

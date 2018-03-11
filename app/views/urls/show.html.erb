@@ -1,0 +1,18 @@
+<p id="notice">
+  <%= flash[:notice] %>
+</p>
+
+<p>
+  <b>Original:</b>
+  <%= link_to @url.original, @url.original %>
+</p>
+
+<p>
+  <b>Shortened:</b>
+  <a href=<%= request.protocol + request.host_with_port + '/' + @url.shortened %>>
+    <%= @url.shortened %>
+  </a>
+</p>
+
+
+<%= link_to 'Shorten another one', new_url_path %>

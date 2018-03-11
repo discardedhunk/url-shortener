@@ -57,4 +57,10 @@ class Url < ApplicationRecord
   def shorten
     self.shortened = SecureRandom.base58(SHORTENED_LENGTH)
   end
+
+  def self.get_by_shortened(code)
+    return nil if (code =~ /\w{#{SHORTENED_LENGTH}}/).nil?
+
+    Url.find_by_shortened(code)
+  end
 end
