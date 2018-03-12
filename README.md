@@ -39,3 +39,6 @@ Then:
 ### Usage
 [Tye Me](http://localhost:3000/)
 
+### Shutdown
+`./scripts/shutdown.sh`
+
