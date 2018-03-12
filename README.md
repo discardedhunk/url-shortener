@@ -1,24 +1,41 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Jason LaCarrubba's URL Shortener
+This is a Rails app for shortening URLs. The app is built on top of Docker and uses Postgres as a datastore.
 
-Things you may want to cover:
+### Install:
 
-* Ruby version
+[Docker For Mac](https://download.docker.com/mac/stable/Docker.dmg)
 
-* System dependencies
+### Ruby version
+2.5.0
 
-* Configuration
+### Rails Version
+5.1.5
 
-* Database creation
+### Build and Run
+From the project's root directory: 
 
-* Database initialization
+`./scripts/build.sh`
 
-* How to run the test suite
+In one terminal window run: 
 
-* Services (job queues, cache servers, search engines, etc.)
+`./scripts/run.sh`
 
-* Deployment instructions
+**Leave the app running in the this terminal window!**
 
-* ...
+### Database Creation and Migration
+In a 2nd terminal window run: 
+
+`./scripts/db_create.sh`
+
+Then: 
+
+`./scripts/db_migrate.sh`
+
+### Tests
+`./scripts/test.sh`
+
+### Usage
+[Tye Me](http://localhost:3000/)
+
