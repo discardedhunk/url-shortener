@@ -150,4 +150,58 @@ describe Url do
       expect(Url.get_by_shortened("8zndKjGR")).to eql(url)
     end
   end
+
+  describe '.new_url' do
+
+    before(:each) do
+      @url = double('Url')
+      allow(Url).to receive(:new).and_return(@url)
+    end
+
+    it 'calls Url.new with original set to value passed in' do
+      allow(@url).to receive(:save!)
+      original = 'https://google.com'
+      Url.new_url(original)
+
+      expect(Url).to have_received(:new).with({original: original})
+    end
+
+    it 'calls Url#save!' do
+      allow(@url).to receive(:save!)
+      Url.new_url('https://google.com')
+
+      expect(@url).to have_received(:save!)
+    end
+
+    it 'returns the new url instance' do
+      allow(@url).to receive(:save!)
+
+      expect(Url.new_url('https://google.com')).to eql(@url)
+    end
+
+    describe 'error cases' do
+
+      it 'calls itself if there is a collision in the shortened code' do
+        @counter = 0
+        allow(@url).to receive(:save!) do
+          @counter += 1
+          raise ActiveRecord::RecordNotUnique.new('index_urls_on_shortened') if @counter < 2
+          true
+        end
+
+        Url.new_url('https://google.com')
+
+        expect(@url).to have_received(:save!).twice
+        expect(Url).to have_received(:new).twice
+      end
+
+      it 'sets error message for original' do
+        allow(@url).to receive(:save!).and_raise(ActiveRecord::RecordNotUnique, 'index_urls_on_original')
+        allow(@url).to receive_message_chain(:errors, :add)
+
+        Url.new_url('https://google.com')
+        expect(@url.errors).to have_received(:add).with(:original, "already taken")
+      end
+    end
+  end
 end

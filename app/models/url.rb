@@ -63,4 +63,21 @@ class Url < ApplicationRecord
 
     Url.find_by_shortened(code)
   end
+
+  def self.new_url(original)
+    url = nil
+    begin
+      url = Url.new(original: original)
+      url.save!
+    rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique => e
+      # check if we have a collision in the shortened and retry
+      if e.message.include?('Shortened has already been taken') || e.message.include?('index_urls_on_shortened')
+        Url.new_url(original)
+      elsif e.message.include?('Original has already been taken') || e.message.include?('index_urls_on_original')
+        # workaround for @url.errors.full_messages[0] not always getting set
+        url.errors.add(:original, "already taken")
+      end
+    end
+    url
+  end
 end

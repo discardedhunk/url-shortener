@@ -34,60 +34,41 @@ describe UrlsController do
   describe 'create' do
 
     before(:each) do
-      @url = Url.new(original: 'https://google.com')
-      allow(Url).to receive(:new).and_return(@url)
+      @original = 'https://google.com'
+      @url = Url.new(original: @original, id: 1)
+      allow(Url).to receive(:new_url).and_return(@url)
+      allow(@url).to receive(:persisted?).and_return(true)
+      post :create, params: {url: {original: @original}}
     end
 
-    it 'calls Url.new' do
-      allow(@url).to receive(:save!)
-      post :create, params: {url: {original: 'https://google.com'}}
-
-      expect(Url).to have_received(:new).with({original: 'https://google.com'})
+    it 'calls Url.new_url' do
+      expect(Url).to have_received(:new_url).with(@original)
     end
 
     it 'redirects to show' do
-      allow(@url).to receive(:save!).and_return(true)
-
-      post :create, params: {url: {original: 'https://google.com'}}
       expect(response).to redirect_to(@url)
     end
 
     it 'sets flash notice message' do
-      allow(@url).to receive(:save!).and_return(true)
-
-      post :create, params: {url: {original: 'https://google.com'}}
       expect(flash[:notice]).to eql('URL has been shortened!')
     end
 
     describe 'error cases' do
-      it 'calls Url#shortened if there is a collision in the shortened code' do
-        @counter = 0
-        allow(@url).to receive(:save!) do
-          @counter += 1
-          raise ActiveRecord::RecordNotUnique.new('index_urls_on_shortened') if @counter < 2
-          true
-        end
-        allow(@url).to receive(:shorten)
+
+      before(:each) do
+        allow(@url).to receive(:persisted?).and_return(false)
+        @message = 'Original already taken'
+        allow(@url).to receive_message_chain(:errors, :full_messages => [@message])
 
         post :create, params: {url: {original: 'https://google.com'}}
-        expect(@url).to have_received(:shorten)
-      end
-
-      it 'flash error message if original url is already shortened' do
-        allow(@url).to receive(:save!).and_raise(ActiveRecord::RecordNotUnique, 'index_urls_on_original')
-
-        post :create, params: {url: {original: 'https://google.com'}}
-        expect(flash[:error]).to eql('Url https://google.com has already been shortened.')
       end
 
       it 'sets flash error message to validation error message' do
-        allow(@url).to receive(:save!).and_return(false)
-        errors = double('errors')
-        allow(@url).to receive(:errors).and_return(errors)
-        allow(errors).to receive(:full_messages).and_return(['bad url'])
-        post :create, params: {url: {original: 'https://google.com'}}
+        expect(flash[:error]).to eql(@message)
+      end
 
-        expect(flash[:error]).to eql('bad url')
+      it 'renders new action' do
+        expect(response).to render_template('new')
       end
     end
   end

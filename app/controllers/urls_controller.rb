@@ -35,30 +35,14 @@ class UrlsController < ApplicationController
   end
 
   def create
-    saved = false
-    url_taken = nil
-    begin
-      @url = Url.new(original: params[:url][:original])
-      saved = @url.save!
-    rescue ActiveRecord::RecordNotUnique => e
-      # check if we have a collision in the shortened and retry
-      if e.message.include?('index_urls_on_shortened')
-        @url.shorten
-        saved = @url.save!
-      else
-        # workaround for @url.errors.full_messages[0] not always getting set
-        url_taken = "Url #{@url.original} has already been shortened."
-      end
-    rescue ActiveRecord::RecordInvalid => e
-      logger.error e.message
-    end
+    @url = Url.new_url(params[:url][:original])
 
-    if saved
+    if @url.persisted?
       flash[:notice] = 'URL has been shortened!'
       redirect_to @url
     else
       respond_to do |format|
-        flash.now[:error] = url_taken ? url_taken : @url.errors.full_messages[0]
+        flash.now[:error] = @url.errors.full_messages[0]
         format.html { render action: 'new' }
       end
     end
