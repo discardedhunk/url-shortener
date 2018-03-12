@@ -1,18 +1,21 @@
-<p id="notice">
-  <%= flash[:notice] %>
-</p>
+<h3>Entry Detail</h3>
 
-<p>
-  <b>Original:</b>
-  <%= link_to @url.original, @url.original %>
-</p>
+<div>
+  <% if flash[:notice] %>
+    <p class="alert alert-success" role="alert">
+      <%= flash[:notice] %>
+    </p>
+  <% end %>
 
-<p>
-  <b>Shortened:</b>
-  <a href=<%= request.protocol + request.host_with_port + '/' + @url.shortened %>>
-    <%= @url.shortened %>
-  </a>
-</p>
+  <p>
+    <b>Original:</b>
+    <%= link_to @url.original, @url.original %>
+  </p>
 
-
-<%= link_to 'Shorten another one', new_url_path %>
+  <p>
+    <b>Shortened:</b>
+    <a href=<%= request.protocol + request.host_with_port + '/' + @url.shortened %>>
+      <%= @url.shortened %>
+    </a>
+  </p>
+</div>

@@ -1,15 +1,17 @@
 <%= form_for(@url) do |f| %>
   <% if flash[:error] %>
-    <div id="error_explanation">
+    <div class="alert alert-danger" role="alert">
       <%= flash[:error] %>
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.text_field :original, :placeholder=>"Please enter a URL" %>
+  <div class="form-group">
+    <label for="originalUrl">Original URL To Shorten</label>
+    <%= f.text_field :original, placeholder: "Please enter a URL", class: "form-control"  %>
   </div>
 
   <div class="actions">
-    <%= f.submit "Submit" %>
+    <%= f.submit "Submit", class: "btn btn-primary" %>
   </div>
 <% end %>
+

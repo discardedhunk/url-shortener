@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Myapp</title>
+    <title>Jason LaCarrubba's URL Shortener</title>
     <%= csrf_meta_tags %>
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
@@ -9,6 +9,17 @@
   </head>
 
   <body>
-    <%= yield %>
+    <div class="container">
+      <h1>Jason LaCarrubba's URL Shortener</h1>
+      <ul class="nav">
+        <li class="nav-item">
+          <%= link_to 'New', new_url_path, class: "nav-link" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to 'List', urls_path, class: "nav-link" %>
+        </li>
+      </ul>
+      <%= yield %>
+    </div>
   </body>
 </html>

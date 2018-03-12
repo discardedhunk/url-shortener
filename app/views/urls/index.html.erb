@@ -1,22 +1,20 @@
-<h1>Shortened URLs</h1>
+<h3>Shortened URLs</h3>
 
 <div>
-  <ul>
-    <% @urls.each do |url| %>
-      <li>
-        <div><%= url.original %></div>
-        <div>
-          <a href=<%= request.protocol + request.host_with_port + '/' + url.shortened %>>
-            <%= url.shortened %>
-          </a>
-        </div>
-        <div><%= link_to 'Show', url %></div>
-        <div><%= link_to 'Destroy', url, method: :delete, data: { confirm: 'Are you sure?' } %></div>
-      </li>
-    <% end %>
-  </ul>
+  <% @urls.each do |url| %>
+    <div class="row">
+      <div class="col-sm">
+        <%= url.original %>
+      </div>
+      <div class="col-sm">
+        <a href=<%= request.protocol + request.host_with_port + '/' + url.shortened %>>
+          <%= url.shortened %>
+        </a>
+      </div>
+    </div>
+    <div class="col-sm">
+      <%= link_to 'Show', url, class: "btn btn-light btn-sm" %>
+      <%= link_to 'Delete', url, method: :delete, data: {confirm: 'Are you sure?'}, class: "btn btn-light btn-sm" %>
+    </div>
+  <% end %>
 </div>
-
-<br />
-
-<%= link_to 'New Url', new_url_path %>
