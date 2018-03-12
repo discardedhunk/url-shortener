@@ -8,12 +8,12 @@ default: &default
 
 development:
   <<: *default
-  database: myapp_development
+  database: shortener_development
 
 test:
   <<: *default
-  database: myapp_test
+  database: shortener_test
 
 production:
   <<: *default
-  database: myapp
+  database: shortener
